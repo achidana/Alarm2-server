@@ -4,7 +4,7 @@
 - Installed Elasticsearch.
 - Installed Flask (Python framework).
 
-- Wrotre Scripts
+- Wrote Scripts
     - verify Elasticseaerch
     - add data
     - reftrieve data
