@@ -5,9 +5,9 @@
 - Installed Flask (Python framework).
 
 - Wrote Scripts
-    - verify Elasticseaerch
+    - verify Elasticsearch
     - add data
-    - reftrieve data
+    - retrieve data
 
 - Wrote sample Pything server
     - script to run it
