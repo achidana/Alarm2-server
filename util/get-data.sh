@@ -1,1 +1,1 @@
-curl -XGET 'localhost:9200/alarm2/_search'
+curl -XGET '45.56.125.90:5000/alarm/byuserid/9374596097'
