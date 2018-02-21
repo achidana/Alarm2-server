@@ -8,7 +8,8 @@ es = Elasticsearch()
 
 @app.route("/")
 def hello():
-    return jsonify({'message': 'Alarm2 ready!'}) 
+    #return jsonify({'message': 'Alarm2 ready!'}) 
+    return "Alarm2 ready!" 
 
 
 @app.route("/alarm", methods=["GET"])
