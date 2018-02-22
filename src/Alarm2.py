@@ -24,8 +24,12 @@ def getUserAlarms(userId):
 
 @app.route("/alarm/<_id>", methods=["GET"])
 def getAlarm(_id):
-	res = es.search(index="alarm2", doc_type="doc", body={"query": { "terms": {"_id": _id}}})
-	return jsonify(res)
+	print _id
+	res = es.search(index="alarm2", doc_type="doc", body={"query": { "terms": {"_id": [_id]}}})
+	print res
+	ret = res["hits"]["hits"][0]["_source"]
+	#res = es.search(index="alarm2", doc_type="doc", body={"query": { "ids": {"values": [_id]}}})
+	return jsonify(ret)
 
 @app.route("/alarm/<_id>", methods=["PUT"])
 def updateAlarm(_id):
@@ -35,14 +39,22 @@ def updateAlarm(_id):
 @app.route("/alarm", methods=["POST"])
 def createAlarm():
 	res = es.index(index="alarm2", doc_type="doc", body=request.data)
-	return jsonify(res)
+	retId = res["_id"]
+	return retId 
 
 @app.route("/alarm/<_id>", methods=["DELETE"])
 def deleteAlarm(_id):
 	res = es.delete(index="alarm2", doc_type="doc", id=_id)
 	return jsonify(res)
 
+@app.route("/alarm/delete", methods=["GET"])
+def deleteAlarmIndex():
+	es.indices.delete(index="alarm2")
+	es.indices.create(index="alarm2")
+	return "DELETED"
+
 @app.route("/groupalarm", methods=["POST"])
 def createGroupAlarm():
 	res = es.index(index="alarm2", doc_type="doc", body=request.data)
-	return jsonify({'_id': res["_id"]}) 
+	retId = res["_id"]
+	return retId 

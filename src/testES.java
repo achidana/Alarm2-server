@@ -8,7 +8,7 @@ public class testES {
 	public static void main(String[] args) {
 		System.out.println("WORKING");
 		HttpURLConnection conn = null;
-		JsonObject json;
+		//JsonObject json;
 		try {
 			StringBuilder result = new StringBuilder();
 			URL url = new URL("http://45.56.125.90:5000/");
