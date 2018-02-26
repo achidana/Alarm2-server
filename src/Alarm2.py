@@ -20,7 +20,8 @@ def getAllEntries():
 @app.route("/alarm/byuserid/<userId>", methods=["GET"])
 def getUserAlarms(userId):
 	res = es.search(index="alarm2", doc_type="doc", body={"query": { "match": {"userId": userId }}})
-	return jsonify(res)
+	ret = res["hits"]
+	return jsonify(ret)
 
 @app.route("/alarm/<_id>", methods=["GET"])
 def getAlarm(_id):
