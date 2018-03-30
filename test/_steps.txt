@@ -1,0 +1,22 @@
+mvn archetype:generate -DgroupId=com.alarm2 -DartifactId=tester -DarchetypeArtifactId=maven-archetype-quickstart -Dversion=1.0-SNAPSHOT
+
+    - The above command creates a sub-directory tester, and populates with a pom.xml, a skeleton app,
+      and a test app.
+	./tester/src/test/java/com/alarm2/AppTest.java
+	./tester/src/main/java/com/alarm2/App.java
+	./tester/pom.xml
+
+cd tester
+
+    - Change into the sub-directory created above.
+
+Add gson libraries from mvnrepository.com to pom.xml dependencies.
+
+mvn install
+
+    - Compile and install the application.
+
+
+run the application (does not include dependent libraries).
+
+java -cp target/tester-1.0-SNAPSHOT.jar com.alarm2.App
