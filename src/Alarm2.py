@@ -22,47 +22,38 @@ client = Client(account_sid, auth_token)
 
 @app.route("/")
 def hello():
-	##client.messages.create(to="+19374596097", from_="+12603234126", body="Hello Scott!")
-	client.calls.create(to="+19374596097", from_="+12603234126", url="http://45.56.125.90:5000/twiml")
 	return "Alarm2 ready!" 
 
-@app.route("/twiml", methods=["GET", "POST"])
-def response():
-        ##return "Hello Scott"
-	##print("A")
-	##response = twiml.Response()	
-	##print("B")
-	##response.say("Hello World!")
-	##print("C")
-	##print(str(response))
-	##print("D")
-	##return str(response)
-	##return Response(str(response))
-	print("A")
-	##print(request.form['Body'])
-	##message_body = request.form['Body']
-	##message_body = request.data
-	print("B")
-	##print("message_body = " + message_body)
+@app.route("/text/<phone>/<message>", methods=["GET",  "POST"])
+def textFriend(phone, message):
+	print phone
+	print message
+	client.messages.create(to=phone, from_="+12603234126", body=message)
+	return "Texting Friend"
+
+@app.route("/call/<phone>/<message>", methods=["GET"])
+def callFriend(phone, message):
+	phone
+	print phone
+	print message
+	if message.find(" ") != -1:
+		message = message.replace(" ", "%20")
+	url_ = "http://45.56.125.90:5000/twiml/call/" + message
+	print url_
+	client.calls.create(to=phone, from_="+12603234126",url=url_)
+	return "Calling Friend"
+
+@app.route("/twiml/call/<message>", methods=["GET", "POST"])
+def twimlCall(message):
+	print message
 	resp = VoiceResponse()
-	print("C")
-	##replyText = getReply(message_body)
-	##replyText = "It works"
-	print("D")
-	resp.say("Hi Scott!")
-	print("E")
-	print("str(resp) = " + str(resp))
+	resp.say(message)
 	return str(resp)
 	##return str(resp)
 
 @app.route("/alarm", methods=["GET"])
 def getAllEntries():
 	res = es.search(index="alarm2", doc_type="doc", body={"query": { "match_all": {}}})
-	return jsonify(res)
-
-@app.route("/token", methods=["GET"])
-def getAllTokens():
-	res = es.search(index="token", doc_type="doc", body={"query": { "match_all": {}}})
 	return jsonify(res)
 
 @app.route("/alarm/byuserid/<userId>", methods=["GET"])
@@ -100,13 +91,15 @@ def deleteAlarm(_id):
 def deleteAlarmIndex():
 	es.indices.delete(index="alarm2")
 	es.indices.delete(index="token")
+	es.indices.delete(index="group")
 	es.indices.create(index="alarm2")
 	es.indices.create(index="token")
+	es.indices.create(index="group")
 	return "DELETED"
 
 @app.route("/groupalarm", methods=["POST"])
 def createGroupAlarm():
-	res = es.index(index="alarm2", doc_type="doc", body=request.data)
+	res = es.index(index="groups", doc_type="doc", body=request.data)
 	retId = res["_id"]
 	return retId 
 
@@ -115,6 +108,16 @@ def addToken():
 	res = es.index(index="token", doc_type="doc", body=request.data)
 	retId = res["_id"]
 	return retId 
+
+@app.route("/tokens", methods=["GET"])
+def getAllTokens():
+	res = es.search(index="token", doc_type="doc", body={"query": { "match_all": {}}})
+	return jsonify(res)
+
+@app.route("/groups", methods=["GET"])
+def getAllGroups():
+	res = es.search(index="group", doc_type="doc", body={"query": { "match_all": {}}})
+	return jsonify(res)
 
 @app.route("/group", methods=["POST"])
 def group():
